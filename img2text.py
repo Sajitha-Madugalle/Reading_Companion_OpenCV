@@ -1,50 +1,36 @@
+import cv2
 from PIL import Image
 import pytesseract
+import matplotlib.pyplot as plt
 
-# If you don't have tesseract executable in your PATH, include the following:
-# pytesseract.pytesseract.tesseract_cmd = r'<full_path_to_your_tesseract_executable>'
-tesseract_cmd = r'C:\Program Files\Tesseract-OCR'
+# Set the tesseract command path
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-# Simple image to string
-print(pytesseract.image_to_string(Image.open('test.png')))
+# Read the image using OpenCV
+img_rgb = cv2.imread('test.png')
 
-"""# In order to bypass the image conversions of pytesseract, just use relative or absolute image path
-# NOTE: In this case you should provide tesseract supported images or tesseract will return error
-print(pytesseract.image_to_string('test.png'))
+# Display the original image using OpenCV
+cv2.imshow('Original Image', img_rgb)
+cv2.waitKey(0)  # Wait for a key press to close the image window
 
-# List of available languages
-print(pytesseract.get_languages(config=''))
+# Perform OCR to get the string
+img2char = pytesseract.image_to_string(img_rgb)
 
-# French text image to string
-print(pytesseract.image_to_string(Image.open('test-european.jpg'), lang='fra'))
+# Perform OCR to get bounding boxes
+img2box = pytesseract.image_to_boxes(img_rgb)
 
-# Batch processing with a single file containing the list of multiple image file paths
-print(pytesseract.image_to_string('images.txt'))
+# Get the image dimensions
+imgH, imgW, _ = img_rgb.shape
 
-# Timeout/terminate the tesseract job after a period of time
-try:
-    print(pytesseract.image_to_string('test.jpg', timeout=2)) # Timeout after 2 seconds
-    print(pytesseract.image_to_string('test.jpg', timeout=0.5)) # Timeout after half a second
-except RuntimeError as timeout_error:
-    # Tesseract processing is terminated
-    pass
+# Draw rectangles around the recognized characters
+for boxes in img2box.splitlines():
+    boxes = boxes.split(" ")
+    x, y, w, h = int(boxes[1]), int(boxes[2]), int(boxes[3]), int(boxes[4])
+    cv2.rectangle(img_rgb, (x, imgH - y), (w, imgH - h), (0, 0, 255), 3)
 
-# Get bounding box estimates
-print(pytesseract.image_to_boxes(Image.open('test.png')))
+# Display the image with bounding boxes using OpenCV
+cv2.imshow('Boxed Image', img_rgb)
+cv2.waitKey(0)  # Wait for a key press to close the image window
 
-# Get verbose data including boxes, confidences, line and page numbers
-print(pytesseract.image_to_data(Image.open('test.png')))
-
-# Get information about orientation and script detection
-print(pytesseract.image_to_osd(Image.open('test.png')))
-
-# Get a searchable PDF
-pdf = pytesseract.image_to_pdf_or_hocr('test.png', extension='pdf')
-with open('test.pdf', 'w+b') as f:
-    f.write(pdf) # pdf type is bytes by default
-
-# Get HOCR output
-hocr = pytesseract.image_to_pdf_or_hocr('test.png', extension='hocr')
-
-# Get ALTO XML output
-xml = pytesseract.image_to_alto_xml('test.png')"""
+# Clean up and close any OpenCV windows
+cv2.destroyAllWindows()
