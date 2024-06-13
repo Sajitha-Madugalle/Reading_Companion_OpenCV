@@ -8,7 +8,7 @@ tesseract_cmd = r'C:\Program Files\Tesseract-OCR'
 # Simple image to string
 print(pytesseract.image_to_string(Image.open('test.png')))
 
-# In order to bypass the image conversions of pytesseract, just use relative or absolute image path
+"""# In order to bypass the image conversions of pytesseract, just use relative or absolute image path
 # NOTE: In this case you should provide tesseract supported images or tesseract will return error
 print(pytesseract.image_to_string('test.png'))
 
@@ -47,4 +47,4 @@ with open('test.pdf', 'w+b') as f:
 hocr = pytesseract.image_to_pdf_or_hocr('test.png', extension='hocr')
 
 # Get ALTO XML output
-xml = pytesseract.image_to_alto_xml('test.png')
+xml = pytesseract.image_to_alto_xml('test.png')"""
