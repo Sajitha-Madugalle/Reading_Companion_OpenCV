@@ -5,17 +5,11 @@ import pytesseract
 class OCRProcessor:
     def __init__(self, image):
         # Set the Tesseract command path
-        pytesseract.pytesseract.tesseract_cmd = self.tesseract_cmd_path = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+        pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
         
         # Read the image using OpenCV
         self.img_rgb = image
         self.imgH, self.imgW, _ = self.img_rgb.shape
-
-    def display_image(self, window_name='Image'):
-        # Display the image using OpenCV
-        cv2.imshow(window_name, self.img_rgb)
-        cv2.waitKey(0)  # Wait for a key press to close the image window
-        cv2.destroyAllWindows()
 
     def extract_text(self):
         # Perform OCR to get the string
@@ -26,15 +20,13 @@ class OCRProcessor:
         # Perform OCR to get bounding boxes
         img2box = pytesseract.image_to_boxes(self.img_rgb)
 
+        # Create a copy of the image to draw boxes on
+        boxed_image = self.img_rgb.copy()
+
         # Draw rectangles around the recognized characters
         for boxes in img2box.splitlines():
             boxes = boxes.split(" ")
             x, y, w, h = int(boxes[1]), int(boxes[2]), int(boxes[3]), int(boxes[4])
-            cv2.rectangle(self.img_rgb, (x, self.imgH - y), (w, self.imgH - h), (0, 0, 255), 3)
+            cv2.rectangle(boxed_image, (x, self.imgH - y), (w, self.imgH - h), (0, 0, 255), 3)
 
-    def display_boxed_image(self, window_name='Boxed Image'):
-        # Display the image with bounding boxes using OpenCV
-        self.draw_boxes()
-        cv2.imshow(window_name, self.img_rgb)
-        cv2.waitKey(0)  # Wait for a key press to close the image window
-        cv2.destroyAllWindows()
+        return boxed_image
