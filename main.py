@@ -4,6 +4,7 @@ import os
 from time import time
 from windowcapture import WindowCapture
 import pytesseract
+from text_detection import OCRProcessor
 
 pytesseract.pytesseract.tesseract_cmd = r'<full_path_to_your_tesseract_executable>'
 
@@ -21,11 +22,19 @@ while(True):
 
     # get an updated image of the game
     screenshot = wincap.get_screenshot()
+    ocr_processor = OCRProcessor(screenshot)
+    
+    text = ocr_processor.extract_text()
+    print(f"Extracted Text: {text}")
+    
+    # Draw bounding boxes and get the updated image
+    boxed_image = ocr_processor.draw_boxes()
 
-    cv.imshow('Computer Vision', screenshot)
+    # Display the image with bounding boxes
+    cv.imshow('Computer Vision', boxed_image)
 
     # debug the loop rate
-    #print('FPS {}'.format(1 / (time() - loop_time)))
+    print('FPS {}'.format(1 / (time() - loop_time)))
     loop_time = time()
 
     # press 'q' with the output window focused to exit.
