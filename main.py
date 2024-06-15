@@ -9,7 +9,7 @@ from windowcapture import WindowCapture # for capturing the window, see windowca
 from text_detection import OCRProcessor # for processing the text, see text_detection.py
 
 
-genai.configure(api_key='AIzaSyCiWyhbRpi2FdtQrvI7MmxBtlFECm0ii4Y')
+genai.configure(api_key='Your API')
 # Load the generative model, Paste The API Key here,
 # You can Find it in Google AI Studio
 # https://aistudio.google.com/
