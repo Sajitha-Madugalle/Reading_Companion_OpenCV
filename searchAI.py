@@ -9,7 +9,7 @@ import pygetwindow as gw
 class SearchAI:
     def __init__(self):
         # Configure the Gemini API
-        genai.configure(api_key='AIzaSyCiWyhbRpi2FdtQrvI7MmxBtlFECm0ii4Y')
+        genai.configure(api_key='Your API')
         self.model = genai.GenerativeModel('gemini-1.0-pro-latest')
         
         # Change the working directory to the folder this script is in
