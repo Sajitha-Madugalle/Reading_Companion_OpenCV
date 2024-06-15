@@ -1,14 +1,13 @@
 import os
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import scrolledtext, messagebox
 from windowcapture import WindowCapture
 from text_detection import OCRProcessor
 import google.generativeai as genai
 import pygetwindow as gw
-import webbrowser
 
-#Configure Gemini API
-genai.configure(api_key='AIzaSyD48mC8Vei5nzIoI6gmzteZAQui8YNBlms')
+# Configure the Gemini API
+genai.configure(api_key='AIzaSyCiWyhbRpi2FdtQrvI7MmxBtlFECm0ii4Y')
 model = genai.GenerativeModel('gemini-1.0-pro-latest')
 
 class Application(tk.Tk):
@@ -16,22 +15,21 @@ class Application(tk.Tk):
         super().__init__()
         self.title("Window Capture App")
 
-        #Set up UI
+        # Set up the UI
         self.create_widgets()
         self.selected_window = None
         self.wincap = None
-        self.prev_response = ""
 
-        #Fetch and display open windows
+        # Fetch and display open windows
         self.refresh_window_list()
 
     def create_widgets(self):
-        #Frame for window selection
+        # Frame for window selection
         self.left_frame = tk.Frame(self, width=200, height=400)
         self.left_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ns")
         self.left_frame.grid_propagate(False)
 
-        #Frame for output display
+        # Frame for output display
         self.right_frame = tk.Frame(self, width=400, height=400)
         self.right_frame.grid(row=0, column=1, padx=10, pady=10, sticky="ns")
         self.right_frame.grid_propagate(False)
@@ -41,7 +39,7 @@ class Application(tk.Tk):
         self.window_label.pack(pady=5)
         self.window_number = tk.Entry(self.left_frame)
         self.window_number.pack(pady=5)
-        self.select_button = tk.Button(self.left_frame, text="Go", command=self.select_window)
+        self.select_button = tk.Button(self.left_frame, text="Select", command=self.select_window)
         self.select_button.pack(pady=5)
 
         # Refresh windows button
@@ -52,9 +50,9 @@ class Application(tk.Tk):
         self.window_listbox = tk.Listbox(self.left_frame)
         self.window_listbox.pack(pady=5, fill=tk.BOTH, expand=True)
 
-        # Frame to hold the buttons
-        self.button_frame = tk.Frame(self.right_frame)
-        self.button_frame.pack(pady=5, fill=tk.BOTH, expand=True)
+        # Output display
+        self.output = scrolledtext.ScrolledText(self.right_frame, wrap=tk.WORD, width=50, height=20)
+        self.output.pack(pady=5, fill=tk.BOTH, expand=True)
 
     def refresh_window_list(self):
         self.windows = gw.getAllTitles()
@@ -82,41 +80,29 @@ class Application(tk.Tk):
 
         screenshot = self.wincap.get_screenshot()
         if screenshot is None or screenshot.size == 0:
-            messagebox.showerror("Error", "Failed to capture screenshot.")
+            self.output.insert(tk.END, "Failed to capture screenshot\n")
             return
 
         ocr_processor = OCRProcessor(screenshot)
         text = ocr_processor.extract_text()
         
-        # Clear previous buttons
-        for widget in self.button_frame.winfo_children():
-            widget.destroy()
+        self.output.delete(1.0, tk.END)  # Clear previous output
 
         if text.strip():
             try:
-                # Process the text with Gemini API
-                response = model.generate_content("find phrases to search in google, to get better understand from this text" + text)
-                new_response = model.generate_content("identify similar ideas and only print one of them from these" + "\n" + response.text + "\n" + self.prev_response)
-                self.prev_response = response.text
+            # Process the text with Gemini API
+                response = model.generate_content("find phrases to search in google, to get better undestand from this text" + text)
+                new_response =  model.generate_content("identify similar ideas and only print one of them from these"+ "\n" + response.text + "\n" + prev_response)
+                prev_response = response.text
                 
-                self.create_search_buttons(new_response.text.split('\n'))
+                self.output.insert(tk.END, f"Text extracted from screenshot: {new_response.text}\n")
             except Exception as e:
-                tk.Label(self.button_frame, text=f"Error processing text with Gemini API: {e}").pack()
+                self.output.insert(tk.END, f"Error processing text with Gemini API: {e}\n")
         else:
-            tk.Label(self.button_frame, text="No text extracted from screenshot.").pack()
+            self.output.insert(tk.END, "No text extracted from screenshot.\n")
 
         # Schedule next capture
-        self.after(5000, self.capture_and_process)
-
-    def create_search_buttons(self, texts):
-        for text in texts:
-            if text.strip():
-                button = tk.Button(self.button_frame, text=text, command=lambda t=text: self.open_google_search(t))
-                button.pack(pady=2, fill=tk.X)
-
-    def open_google_search(self, search_text):
-        url = f"https://www.google.com/search?q={search_text}"
-        webbrowser.open(url)
+        self.after(1000, self.capture_and_process)
 
 if __name__ == "__main__":
     # Change the working directory to the folder this script is in
