@@ -1,4 +1,4 @@
-# Window Capture and OCR Search Application
+# Reading Companion- CV based OCR application with Gemini Integration
 
 This is a simple yet powerful application that uses Optical Character Recognition (OCR) and Computer Vision to detect open windows, extract their content, filter the text, and suggest important phrases to search on Google using Gemini API integration. The application is useful in various scenarios, such as reading PDFs or attending lectures, by highlighting key points and providing one-click Google search functionality.
 
