@@ -1,11 +1,13 @@
 import os
-import tkinter as tk
-from tkinter import messagebox
-from windowcapture import WindowCapture
-from text_detection import OCRProcessor
-import google.generativeai as genai
-import pygetwindow as gw
-import webbrowser
+import tkinter as tk # for the GUI
+from tkinter import messagebox # for the GUI
+import google.generativeai as genai # for using the generative model
+import pygetwindow as gw # for getting the window titles
+import webbrowser # for opening the browser
+
+from windowcapture import WindowCapture # for capturing the window, see windowcapture.py
+from text_detection import OCRProcessor # for processing the text, see text_detection.py
+
 
 genai.configure(api_key='AIzaSyCiWyhbRpi2FdtQrvI7MmxBtlFECm0ii4Y')
 # Load the generative model, Paste The API Key here,
@@ -19,8 +21,10 @@ class Application(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Reading Companion") # Set the title of the window
+        self.iconbitmap('iconRC.ico') # Set the icon of the window
         
-        self.wm_attributes("-topmost", True)
+        #self.wm_attributes("-topmost", True)
+        #set if the windwo is always on the top
         
         self.create_widgets()
         self.selected_window = None
@@ -32,7 +36,7 @@ class Application(tk.Tk):
     def create_widgets(self):
         """ Create the widgets for the GUI."""
         
-        self.left_frame = tk.Frame(self, width=200, height=400)
+        self.left_frame = tk.Frame(self, width=400, height=400)
         self.left_frame.grid(row=0, column=0, padx=10, pady=10, sticky="ns") 
         self.left_frame.grid_propagate(True) #adgust the left frame size
 
@@ -52,7 +56,7 @@ class Application(tk.Tk):
         self.refresh_button.pack(pady=5)
         # refresh the window widget for the GUI
 
-        self.window_listbox = tk.Listbox(self.left_frame)
+        self.window_listbox = tk.Listbox(self.left_frame, width=100, height=20)
         self.window_listbox.pack(pady=5, fill=tk.BOTH, expand=True)
         # listing windows widget for the GUI
 
@@ -96,7 +100,7 @@ class Application(tk.Tk):
         
         for widget in self.button_frame.winfo_children():
             # Destroy the existing buttons in the search buttons
-            # this will happen every 5 seconds, can change the time Go to line 112
+            # this will happen every 5 seconds, can change the time Go to line 129
             widget.destroy() 
 
         if text.strip():
@@ -115,7 +119,6 @@ class Application(tk.Tk):
                     Deep learning models definitely could be used to do the same thing"""
                 
                 
-                
                 self.create_search_buttons(new_response.text.split('\n')) # Create search buttons for the extracted text
                 
             except Exception as e:
@@ -123,6 +126,7 @@ class Application(tk.Tk):
         else:
             tk.Label(self.button_frame, text="No text extracted from screenshot.").pack() # Error message if no text extracted
 
+        #refresh the List
         self.after(5000, self.capture_and_process) # Capture and process the text every 5 seconds, can change the time.
 
     def create_search_buttons(self, texts):
