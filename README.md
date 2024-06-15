@@ -2,9 +2,11 @@
 
 This is a simple yet powerful application that uses Optical Character Recognition (OCR) and Computer Vision to detect open windows, extract their content, filter the text, and suggest important phrases to search on Google using Gemini API integration. The application is useful in various scenarios, such as reading PDFs or attending lectures, by highlighting key points and providing one-click Google search functionality.
 
+<!--
 <p align="center">
   <img src="media/readingcompanion.gif" />
-</p>
+</p> 
+-->
 
 ## Table of Contents
 
@@ -90,16 +92,25 @@ This is a simple yet powerful application that uses Optical Character Recognitio
   <em>First Window showing the currently opened windows</em>
 </p>
 
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
 
 <!-- Second and third images as side-by-side subfigures -->
 <p align="center">
-  <figure style="display: flex; flex-direction: row;">
-    <img src="media/capturedwindow.png" alt="Captured Screenshot" style="width: 45%; margin-right: 10px;">
-    <img src="media/searched.png" alt="Extracted Text" style="width: 45%;">
-  </figure>
-  <figcaption style="text-align: center;">Left: Captured Screenshot | Right: Topics identified by Gemini</figcaption>
+
+  <img src="media/searched.png" alt="Extracted Text" style="width: 45%;">
+&nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="media/capturedwindow.png" alt="Captured Screenshot" style="width: 45%; margin-right: 10px;">
+  <br>
+  <em>Selected window and important phrases to search suggested by Gemini</em>
 </p>
 
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
 
 <!-- Fourth image alone -->
 <p align="center">
@@ -108,10 +119,23 @@ This is a simple yet powerful application that uses Optical Character Recognitio
   <em>Google Search Results</em>
 </p>
 
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request or open an Issue to improve this project.
+Contributions are welcome! 
+
+### Problems
+
+- Refresh rate and FPS tradeoff
+- Improved GUI
+- It is great if there is an floating icon to openup the window, so the reader is not get distracted.
+- Applying Deep Learning algorithms to identify Maths phrases, and solve them
+
+Please feel free to submit a Pull Request or open an Issue to improve this project.
 
 1. Fork the repository.
 2. Create your feature branch:
@@ -131,3 +155,9 @@ Contributions are welcome! Please feel free to submit a Pull Request or open an 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## References
+1. Fast Window Capture - OpenCV Object Detection in Games #4 [See here](https://youtu.be/WymCpVUPWQ4?si=stnlFkPsGhF7rQno).
+    by [Learn Code By Gaming](https://www.youtube.com/@LearnCodeByGaming)
+2. Realtime Text Detection in Images using Tesseract | OpenCV | Python | Tutorial for beginners [See here](https://youtu.be/Y7XBsFzByTQ?si=1y1tvC6NHxluWbZD).
+    by [DeepLearning_by_PhDScholar](https://www.youtube.com/channel/UCUv49cJ3xwr1NXxl9qIJ7kA)
